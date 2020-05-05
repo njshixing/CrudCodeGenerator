@@ -13,5 +13,7 @@ public interface GeneratorService {
 
     Map<String, String> getResultByParams(Map<String, Object> params) throws IOException, TemplateException;
 
+    Map<String, String> getResultByParamsV2(Map<String, Object> params) throws IOException, TemplateException;
+
     File getFileByParams(Map<String, Object> params) throws IOException, TemplateException;
 }

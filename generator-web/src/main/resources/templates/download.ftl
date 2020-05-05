@@ -8,11 +8,7 @@
     <@netCommon.commonStyle />
     <@netCommon.commonScript />
 <script>
-
     $(function () {
-        /**
-         * 初始化 table sql 3
-         */
         var ddlSqlArea = CodeMirror.fromTextArea(document.getElementById("ddlSqlArea"), {
             lineNumbers: true,
             matchBrackets: true,
@@ -36,7 +32,6 @@
             gutters:["CodeMirror-linenumbers", "CodeMirror-foldgutter"]
         });
         genCodeArea.setSize('auto','auto');
-
         var codeData;
         // 使用：var jsonObj = $("#formId").serializeObject();
         $.fn.serializeObject = function()
@@ -55,15 +50,6 @@
             });
             return o;
         };
-        var historyCount=0;
-        //初始化清除session
-        if (window.sessionStorage){
-            //修复当F5刷新的时候，session没有清空各个值，但是页面的button没了。
-            sessionStorage.clear();
-        }
-        /**
-         * 生成代码
-         */
         $('#btnGenCode').click(function ()  {
             var jsonData = {
                 "tableSql": ddlSqlArea.getValue(),
@@ -73,31 +59,38 @@
                 "dataType":$("#dataType").val(),
                 "tinyintTransType":$("#tinyintTransType").val(),
                 "nameCaseType":$("#nameCaseType").val(),
+                "className":$("#className").val(),
+                "daoSuffix":$("#daoSuffix").val(),
                 "swagger":$("#isSwagger").val()
             };
             $.ajax({
                 type: 'POST',
-                url: base_url + "/mybatis",
+                url: base_url + "/genCode",
                 data:(JSON.stringify(jsonData)),
                 dataType: "json",
                 contentType: "application/json",
                 success: function (data) {
                     if (data.code === 200) {
                         codeData = data.data;
-                        genCodeArea.setValue(codeData.entity);
+                        genCodeArea.setValue(codeData.model);
                         genCodeArea.setSize('auto', 'auto');
-                        $.toast("代码生成成功");
+                        $.toast({
+                          text : "代码生成成功",showHideTransition : 'slide',
+                          bgColor : 'blue',textColor : '#eee',allowToastClose : false,hideAfter : 1000,
+                          stack : 5,textAlign : 'left',position : 'mid-center'
+                        });
                     } else {
-                        $.toast("× 代码生成失败 :"+data.msg);
+                        $.toast({
+                          text : "代码生成失败:"+data.msg,showHideTransition : 'slide',
+                          bgColor : 'blue',textColor : 'red',allowToastClose : false,
+                          hideAfter : 3000,stack : 5,textAlign : 'left', position : 'mid-center'
+                        });
                     }
                 }
             });
             return false;
         });
 
-        /**
-         * 按钮事件组
-         */
         $('.generator').bind('click', function () {
             if (!$.isEmptyObject(codeData)) {
                 var id = this.id;
@@ -108,24 +101,48 @@
         $('#btnCopy').on('click', function(){
             if(!$.isEmptyObject(genCodeArea.getValue())&&!$.isEmptyObject(navigator)&&!$.isEmptyObject(navigator.clipboard)){
                 navigator.clipboard.writeText(genCodeArea.getValue());
-                $.toast("√ 复制成功");
+                    $.toast({
+                          text : "复制成功",showHideTransition : 'slide',
+                          bgColor : 'blue',textColor : '#eee',allowToastClose : false,hideAfter : 1000,
+                          stack : 5,textAlign : 'left',position : 'mid-center'
+                    });
             }
+        });
+        $('#btnDownload').on('click', function(){
+            var jsonData = {
+                "tableSql": ddlSqlArea.getValue(),
+                "packageName":$("#packageName").val(),
+                "returnUtil":$("#returnUtil").val(),
+                "authorName":$("#authorName").val(),
+                "dataType":$("#dataType").val(),
+                "tinyintTransType":$("#tinyintTransType").val(),
+                "nameCaseType":$("#nameCaseType").val(),
+                "className":$("#className").val(),
+                "daoSuffix":$("#daoSuffix").val(),
+                "swagger":$("#isSwagger").val()
+            };
+            var tableSql = ddlSqlArea.getValue();
+            var packageName = $("#packageName").val();
+            var returnUtil = $("#returnUtil").val();
+            var authorName = $("#authorName").val();
+            var dataType = $("#dataType").val();
+            var tinyintTransType = $("#tinyintTransType").val();
+            var nameCaseType = $("#nameCaseType").val();
+            var className = $("#className").val();
+            var daoSuffix = $("#daoSuffix").val();
+            var swagger = $("#isSwagger").val();
+            var url = base_url + "/getCodeFile?packageName="+packageName+"&returnUtil="+returnUtil+"&authorName="+authorName+"&dataType="+dataType
+                        +"&tinyintTransType="+tinyintTransType
+                        +"&nameCaseType="+nameCaseType+"&daoSuffix="+daoSuffix+"&swagger="+swagger+"&tableSql="+tableSql+"&className="+className;
+            window.open(url)
         });
     });
 </script>
 </head>
 <body style="background-color: #e9ecef">
-
-    <div class="container">
-    </div>
-
-<!-- Main jumbotron for a primary marketing message or call to action -->
 <div class="jumbotron">
     <div class="container">
-        <h2>Spring Boot Code Generator</h2>
-        <p class="lead">
-        </p>
-        <div id="donate" class="container" show="no"></div>
+        <h3>Spring Boot Code Generator</h3>
         <hr>
         <div class="input-group mb-3">
             <div class="input-group-prepend">
@@ -156,26 +173,39 @@
             </div>
             <select type="text" class="form-control" id="tinyintTransType"
                     name="tinyintTransType">
-                <option value="boolean">boolean</option>
-                <option value="Boolean">Boolean</option>
                 <option value="Integer">Integer</option>
                 <option value="int">int</option>
+                <option value="boolean">boolean</option>
+                <option value="Boolean">Boolean</option>
                 <option value="String">String</option>
             </select>
             <div class="input-group-prepend">
                 <span class="input-group-text">命名转换规则</span>
             </div>
-            <select type="text" class="form-control" id="nameCaseType"
-                    name="nameCaseType">
+            <select type="text" class="form-control" id="nameCaseType" name="nameCaseType">
                 <option value="CamelCase">驼峰</option>
                 <option value="UnderScoreCase">下划线</option>
                 <#--<option value="UpperUnderScoreCase">大写下划线</option>-->
             </select>
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">自定义类名</span>
+            </div>
+            <input type="text" class="form-control" id="className" name="className" value="" placeholder="默认表名">
+            <div class="input-group-prepend">
+                <span class="input-group-text">dao接口类后缀</span>
+            </div>
+            <select type="text" class="form-control" id="daoSuffix"
+                    name="tinyintTransType">
+                <option value="DAO">**DAO</option>
+                <option value="Mapper">**Mapper</option>
+                <option value="Dao">**Dao</option>
+            </select>
             <div class="input-group-prepend">
                 <span class="input-group-text">swagger-ui</span>
             </div>
-            <select type="text" class="form-control" id="isSwagger"
-                    name="isSwagger">
+            <select type="text" class="form-control" id="isSwagger" name="isSwagger">
                 <option value="false">关闭</option>
                 <option value="true">开启</option>
             </select>
@@ -188,142 +218,41 @@ CREATE TABLE 'userinfo' (
   PRIMARY KEY ('user_id')
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户信息'
         </textarea><br>
-        <p><button class="btn btn-primary btn-lg disabled" id="btnGenCode" role="button" data-toggle="popover" data-content="">开始生成 »</button> <button class="btn alert-secondary" id="btnCopy">一键复制</button></p>
-        <div id="history" class="btn-group" role="group" aria-label="Basic example"></div>
+        <p>
+            <button class="btn btn-info" id="btnGenCode" role="button" data-toggle="popover" data-content="">开始生成</button>
+            <button class="btn btn-info" id="btnCopy">一键复制</button>
+            <button class="btn btn-info" id="btnDownload">下载文件</button>
+        </p>
         <hr>
-        <!-- Example row of columns -->
         <div class="row" style="margin-top: 10px;">
-            <div class="btn-toolbar col-md-5" role="toolbar" aria-label="Toolbar with button groups">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="btn btn-secondary disabled setWidth" id="btnGroupAddon">通用实体</div>
-                    </div>
-                </div>
-                <div class="btn-group" role="group" aria-label="First group">
-                    <button type="button" class="btn btn-default generator" id="model">entity(set/get)</button>
-                    <button type="button" class="btn btn-default generator" id="beetlentity">entity(lombok)</button>
-                </div>
+        <div class="btn-toolbar" role="toolbar">
+            <div class="btn-group">
+                <button type="button" class="btn btn-secondary btn-sm generator" id="model">model(set/get)</button>
+                <button type="button" class="btn btn-secondary btn-sm generator" id="do">DO</button>
+                <button type="button" class="btn btn-secondary btn-sm generator" id="dto">DTO</button>
             </div>
-            <div class="btn-toolbar col-md-7" role="toolbar" aria-label="Toolbar with button groups">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="btn btn-secondary disabled setWidth" id="btnGroupAddon">Mybatis</div>
-                    </div>
-                </div>
-                <div class="btn-group" role="group" aria-label="First group">
-                    <button type="button" class="btn btn-default generator" id="mybatis">mybatis</button>
-                    <button type="button" class="btn btn-default generator" id="mapper">mapper</button>
-                    <button type="button" class="btn btn-default generator" id="service">service</button>
-                    <button type="button" class="btn btn-default generator" id="service_impl">service_impl</button>
-                    <button type="button" class="btn btn-default generator" id="controller">controller</button>
-                </div>
+            <div class="btn-group">
+                 <button type="button" class="btn btn-success btn-sm generator" id="mybatis">mybatis</button>
+                 <button type="button" class="btn btn-success btn-sm generator" id="mapper">mapper</button>
             </div>
-        </div>
-        <!-- Example row of columns -->
-        <div class="row" style="margin-top: 10px;">
-            <div class="btn-toolbar col-md-5" role="toolbar" aria-label="Toolbar with button groups">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="btn btn-secondary disabled setWidth" id="btnGroupAddon">MybatisPlus</div>
-                    </div>
-                </div>
-                <div class="btn-group" role="group" aria-label="First group">
-                    <button type="button" class="btn btn-default generator" id="plusmapper">mapper</button>
-                    <button type="button" class="btn btn-default generator" id="pluscontroller">controller</button>
-                </div>
+            <div class="btn-group">
+                 <button type="button" class="btn btn-info btn-sm generator" id="service">service</button>
+                 <button type="button" class="btn btn-info btn-sm generator" id="serviceImpl">serviceImpl</button>
+                 <button type="button" class="btn btn-info btn-sm generator" id="bo">BO</button>
+                 <button type="button" class="btn btn-info btn-sm generator" id="boImpl">BOImpl</button>
             </div>
-
-            <div class="btn-toolbar col-md-5" role="toolbar" aria-label="Toolbar with button groups">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="btn btn-secondary disabled setWidth" id="btnGroupAddon">UI</div>
-                    </div>
-                </div>
-                <div class="btn-group" role="group" aria-label="First group">
-                    <button type="button" class="btn btn-default generator" id="swagger-ui">swagger-ui</button>
-                    <button type="button" class="btn btn-default generator" id="element-ui">element-ui</button>
-                    <button type="button" class="btn btn-default generator" id="bootstrap-ui">bootstrap-ui</button>
-                </div>
+            <div class="btn-group">
+                 <button type="button" class="btn btn-warning btn-sm generator" id="controller">controller</button>
+                 <button type="button" class="btn btn-warning btn-sm generator" id="swagger-ui">swagger-ui</button>
             </div>
-        </div>
-
-        <div class="row" style="margin-top: 10px;">
-            <div class="btn-toolbar col-md-5" role="toolbar" aria-label="Toolbar with button groups">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="btn btn-secondary disabled setWidth" id="btnGroupAddon">BeetlSQL</div>
-                    </div>
-                </div>
-                <div class="btn-group" role="group" aria-label="First group">
-                    <button type="button" class="btn btn-default generator" id="beetlmd">beetlmd</button>
-                    <button type="button" class="btn btn-default generator" id="beetlcontroller">beetlcontroller</button>
-                </div>
-            </div>
-            <div class="btn-toolbar col-md-5" role="toolbar" aria-label="Toolbar with button groups">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="btn btn-secondary disabled setWidth" id="btnGroupAddon">JPA</div>
-                    </div>
-                </div>
-                <div class="btn-group" role="group" aria-label="First group">
-                    <button type="button" class="btn btn-default generator" id="entity">jpa-entity</button>
-                    <button type="button" class="btn btn-default generator" id="repository">repository</button>
-                    <button type="button" class="btn btn-default generator" id="jpacontroller">controller</button>
-                </div>
-            </div>
-        </div>
-        <div class="row" style="margin-top: 10px;">
-            <div class="btn-toolbar col-md-5" role="toolbar" aria-label="Toolbar with button groups">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="btn btn-secondary disabled setWidth" id="btnGroupAddon">JdbcTemplate</div>
-                    </div>
-                </div>
-                <div class="btn-group" role="group" aria-label="First group">
-                    <button type="button" class="btn btn-default generator" id="jtdaoimpl">daoimpl</button>
-                    <button type="button" class="btn btn-default generator" id="jtdao">dao</button>
-                </div>
-            </div>
-            <div class="btn-toolbar col-md-7" role="toolbar" aria-label="Toolbar with button groups">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="btn btn-secondary disabled setWidth" id="btnGroupAddon">SQL</div>
-                    </div>
-                </div>
-                <div class="btn-group" role="group" aria-label="First group">
-                    <button type="button" class="btn btn-default generator" id="select">select</button>
-                    <button type="button" class="btn btn-default generator" id="insert">insert</button>
-                    <button type="button" class="btn btn-default generator" id="update">update</button>
-                    <button type="button" class="btn btn-default generator" id="delete">delete</button>
-                </div>
-            </div>
-        </div>
-        <div class="row" style="margin-top: 10px;">
-            <div class="btn-toolbar col-md-5" role="toolbar" aria-label="Toolbar with button groups">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="btn btn-secondary disabled setWidth" id="btnGroupAddon">DTO</div>
-                    </div>
-                </div>
-                <div class="btn-group" role="group" aria-label="First group">
-                    <button type="button" class="btn btn-default generator" id="beetlentitydto">entitydto(lombok+swagger)</button>
-                </div>
-            </div>
-            <div class="btn-toolbar col-md-5" role="toolbar" aria-label="Toolbar with button groups">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <div class="btn btn-secondary disabled setWidth" id="btnGroupAddon">Util</div>
-                    </div>
-                </div>
-                <div class="btn-group" role="group" aria-label="First group">
-                    <button type="button" class="btn btn-default generator" id="util">bean get set</button>
-                    <button type="button" class="btn btn-default generator" id="json">json</button>
-                    <button type="button" class="btn btn-default generator" id="xml">xml</button>
-                </div>
+            <div class="btn-group">
+                 <button type="button" class="btn btn-dark btn-sm generator" id="util">util</button>
             </div>
         </div>
         <hr>
-        <textarea id="genCodeArea" class="form-control btn-lg" ></textarea>
+    </div>
+    <div class="row" style="margin-top: 10px;">
+         <textarea id="genCodeArea" class="form-control btn-lg" ></textarea>
     </div>
 </div>
 </body>

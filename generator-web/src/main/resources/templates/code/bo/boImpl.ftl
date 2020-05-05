@@ -1,4 +1,7 @@
+package ${packageName}.bo.impl;
+
 import org.springframework.stereotype.Service;
+import ${packageName}.bo.${classInfo.className}BO
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -7,15 +10,15 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @description ${classInfo.classComment}
+ * ${classInfo.classComment}
  * @author ${authorName}
  * @date ${.now?string('yyyy-MM-dd HH:mm:ss')}
  */
 @Service
-public class ${classInfo.className}ServiceImpl implements ${classInfo.className}Service {
+public class ${classInfo.className}BOImpl implements ${classInfo.className}BO {
 
 	@Resource
-	private ${classInfo.className}Mapper ${classInfo.className?uncap_first}Mapper;
+	private ${classInfo.className}${classInfo.daoSuffix} ${classInfo.className?uncap_first}${classInfo.daoSuffix};
 
 
 	@Override

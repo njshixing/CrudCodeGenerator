@@ -1,3 +1,5 @@
+package ${packageName}.service;
+
 import java.util.Map;
 
 /**

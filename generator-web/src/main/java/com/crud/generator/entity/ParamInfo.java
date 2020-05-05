@@ -14,6 +14,8 @@ public class ParamInfo {
     private String nameCaseType;
     private String tinyintTransType;
     private String dataType;
+    private String className;
+    private String daoSuffix;
     private boolean swagger;
 
     @Data

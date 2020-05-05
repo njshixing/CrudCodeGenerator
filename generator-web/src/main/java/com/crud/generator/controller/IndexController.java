@@ -9,14 +9,12 @@ import com.crud.generator.entity.ParamInfo;
 import com.crud.generator.service.GeneratorService;
 import com.crud.generator.util.CodeGenerateException;
 import com.crud.generator.util.TableParseUtil;
+import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -37,12 +35,6 @@ public class IndexController {
 
     @GetMapping("/")
     public String index() {
-        return "index";
-    }
-
-
-    @GetMapping("/download")
-    public String download() {
         return "download";
     }
 
@@ -69,6 +61,9 @@ public class IndexController {
                     classInfo = TableParseUtil.processTableIntoClassInfo(paramInfo);
                     break;
             }
+            String className = StringUtils.isNotBlank(paramInfo.getClassName()) ? paramInfo.getClassName() : classInfo.getClassName();
+            classInfo.setClassName(className);
+            classInfo.setDaoSuffix(paramInfo.getDaoSuffix());
             // process the param
             Map<String, Object> params = new HashMap<>(8);
             params.put("classInfo", classInfo);
@@ -81,7 +76,7 @@ public class IndexController {
             //log.info(JSON.toJSONString(paramInfo));
             log.info("generator table:" + classInfo.getTableName() + ",field size:" + (classInfo.getFieldList() == null ? "" : classInfo.getFieldList().size()));
             // generate the code 需要加新的模板请在里面改
-            Map<String, String> result = generatorService.getResultByParams(params);
+            Map<String, String> result = generatorService.getResultByParamsV2(params);
             return new MyResponse<>(result);
         } catch (IOException | CodeGenerateException | freemarker.template.TemplateException e) {
             log.error(e.getMessage(), e);
@@ -89,10 +84,14 @@ public class IndexController {
         }
     }
 
-    @GetMapping("/mybatis")
+    @PostMapping("/postCodeFile")
     @ResponseBody
-    public void mybatis(@RequestBody ParamInfo paramInfo, HttpServletResponse response) throws Exception {
+    public void postCodeFile(@RequestBody ParamInfo paramInfo, HttpServletResponse response) throws Exception {
         ClassInfo classInfo = TableParseUtil.processTableIntoClassInfo(paramInfo);
+        String className = StringUtils.isNotBlank(paramInfo.getClassName()) ? paramInfo.getClassName() : classInfo.getClassName();
+        classInfo.setClassName(className);
+        classInfo.setDaoSuffix(paramInfo.getDaoSuffix());
+
         Map<String, Object> params = new HashMap<>(8);
         params.put("classInfo", classInfo);
         params.put("tableName", classInfo.getTableName());
@@ -103,6 +102,56 @@ public class IndexController {
         params.put("generateDate", DateUtil.formatTime(new Date()));
 
         String fileName = "mybatis.zip";
+        response.setHeader("content-type", "text/plain");
+        response.setHeader("content-type", "application/x-msdownload;");
+        response.setContentType("text/plain; charset=utf-8");
+        response.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+
+        ZipOutputStream zipOut = new ZipOutputStream(response.getOutputStream());
+        File tempFileDir = generatorService.getFileByParams(params);
+        ZipUtil.zip(zipOut, true, null, tempFileDir);
+        zipOut.close();
+        FileUtil.del(tempFileDir.getPath());
+    }
+
+    @GetMapping("/getCodeFile")
+    @ResponseBody
+    public void getCodeFile(@RequestParam(name = "packageName") String packageName,
+                            @RequestParam(name = "tableSql") String tableSql,
+                            @RequestParam(name = "returnUtil") String returnUtil,
+                            @RequestParam(name = "authorName") String authorName,
+                            @RequestParam(name = "dataType") String dataType,
+                            @RequestParam(name = "tinyintTransType") String tinyintTransType,
+                            @RequestParam(name = "nameCaseType") String nameCaseType,
+                            @RequestParam(name = "className") String className,
+                            @RequestParam(name = "daoSuffix") String daoSuffix,
+                            @RequestParam(name = "swagger") boolean swagger,
+                            HttpServletResponse response) throws IOException, TemplateException {
+        ParamInfo paramInfo = new ParamInfo();
+        paramInfo.setTableSql(tableSql);
+        paramInfo.setAuthorName(authorName);
+        paramInfo.setPackageName(packageName);
+        paramInfo.setReturnUtil(returnUtil);
+        paramInfo.setNameCaseType(nameCaseType);
+        paramInfo.setTinyintTransType(tinyintTransType);
+        paramInfo.setDataType(dataType);
+        paramInfo.setClassName(className);
+        paramInfo.setDaoSuffix(daoSuffix);
+        paramInfo.setSwagger(swagger);
+        ClassInfo classInfo = TableParseUtil.processTableIntoClassInfo(paramInfo);
+        className = StringUtils.isNotBlank(paramInfo.getClassName()) ? paramInfo.getClassName() : classInfo.getClassName();
+        classInfo.setClassName(className);
+        classInfo.setDaoSuffix(paramInfo.getDaoSuffix());
+        Map<String, Object> params = new HashMap<>(8);
+        params.put("classInfo", classInfo);
+        params.put("tableName", classInfo.getTableName());
+        params.put("authorName", paramInfo.getAuthorName());
+        params.put("packageName", paramInfo.getPackageName());
+        params.put("returnUtil", paramInfo.getReturnUtil());
+        params.put("swagger", paramInfo.isSwagger());
+        params.put("generateDate", DateUtil.formatTime(new Date()));
+
+        String fileName = "code.zip";
         response.setHeader("content-type", "text/plain");
         response.setHeader("content-type", "application/x-msdownload;");
         response.setContentType("text/plain; charset=utf-8");

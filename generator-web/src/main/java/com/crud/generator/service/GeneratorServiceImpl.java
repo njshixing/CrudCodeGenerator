@@ -4,14 +4,11 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.extra.template.TemplateEngine;
 import com.crud.generator.entity.ClassInfo;
 import com.crud.generator.util.TemplateEngineUtil;
-import freemarker.template.TemplateException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -76,15 +73,51 @@ public class GeneratorServiceImpl implements GeneratorService {
         TemplateEngine engine = TemplateEngineUtil.INSTANCE;
         // result
         ClassInfo classInfo = (ClassInfo) params.get("classInfo");
-        // UI
-        engine.getTemplate("code-format/ui/swagger-ui.ftl").render(params, new File(tempFileDir + "/swagger-ui.java"));
-        // mybatis old
-        engine.getTemplate("code-format/mybatis/controller.ftl").render(params, new File(tempFileDir + "/" + classInfo.getClassName() + "Controller.java"));
-        engine.getTemplate("code-format/mybatis/service.ftl").render(params, new File(tempFileDir + "/" + classInfo.getClassName() + "Service.java"));
-        engine.getTemplate("code-format/mybatis/service_impl.ftl").render(params, new File(tempFileDir + "/" + classInfo.getClassName() + "ServiceImpl.java"));
-        engine.getTemplate("code-format/mybatis/mapper.ftl").render(params, new File(tempFileDir + "/" + classInfo.getClassName() + "DAO.java"));
-        engine.getTemplate("code-format/mybatis/mybatis.ftl").render(params, new File(tempFileDir + "/" + classInfo.getClassName() + "Mapper.xml"));
-        engine.getTemplate("code-format/mybatis/model.ftl").render(params, new File(tempFileDir + "/" + classInfo.getClassName() + "DO.java"));
+        // bo
+        engine.getTemplate("code/bo/bo.ftl").render(params, new File(tempFileDir + "/" + classInfo.getClassName() + "BO.java"));
+        engine.getTemplate("code/bo/boImpl.ftl").render(params, new File(tempFileDir + "/" + classInfo.getClassName() + "BOImpl.java"));
+        // controller
+        engine.getTemplate("code/controller/swagger-ui.ftl").render(params, new File(tempFileDir + "/swagger-ui.txt"));
+        engine.getTemplate("code/controller/controller.ftl").render(params, new File(tempFileDir + "/" + classInfo.getClassName() + "Controller.java"));
+        // mybatis
+        engine.getTemplate("code/dao/mapper.ftl").render(params, new File(tempFileDir + "/" + classInfo.getClassName() + classInfo.getDaoSuffix() + ".java"));
+        engine.getTemplate("code/dao/mybatis.ftl").render(params, new File(tempFileDir + "/" + classInfo.getClassName() + "Mapper.xml"));
+        // entity
+        engine.getTemplate("code/entity/do.ftl").render(params, new File(tempFileDir + "/" + classInfo.getClassName() + "DO.java"));
+        engine.getTemplate("code/entity/dto.ftl").render(params, new File(tempFileDir + "/" + classInfo.getClassName() + "DTO.java"));
+        engine.getTemplate("code/entity/model.ftl").render(params, new File(tempFileDir + "/" + classInfo.getClassName() + ".java"));
+        // service
+        engine.getTemplate("code/service/service.ftl").render(params, new File(tempFileDir + "/" + classInfo.getClassName() + "Service.java"));
+        engine.getTemplate("code/service/serviceImpl.ftl").render(params, new File(tempFileDir + "/" + classInfo.getClassName() + "ServiceImpl.java"));
+        // util
+        engine.getTemplate("code/util/util.ftl").render(params, new File(tempFileDir + "/" + classInfo.getClassName() + "Util.txt"));
         return tempFileDir;
+    }
+
+    @Override
+    public Map<String, String> getResultByParamsV2(Map<String, Object> params) {
+        TemplateEngine engine = TemplateEngineUtil.INSTANCE;
+        // result
+        Map<String, String> result = new HashMap<>(32);
+        result.put("tableName", params.get("tableName") + "");
+        // bo
+        result.put("bo", engine.getTemplate("code/bo/bo.ftl").render(params));
+        result.put("boImpl", engine.getTemplate("code/bo/boImpl.ftl").render(params));
+        // controller
+        result.put("swagger-ui", engine.getTemplate("code/controller/swagger-ui.ftl").render(params));
+        result.put("controller", engine.getTemplate("code/controller/controller.ftl").render(params));
+        // mybatis
+        result.put("mapper", engine.getTemplate("code/dao/mapper.ftl").render(params));
+        result.put("mybatis", engine.getTemplate("code/dao/mybatis.ftl").render(params));
+        // entity
+        result.put("do", engine.getTemplate("code/entity/do.ftl").render(params));
+        result.put("dto", engine.getTemplate("code/entity/dto.ftl").render(params));
+        result.put("model", engine.getTemplate("code/entity/model.ftl").render(params));
+        // service
+        result.put("service", engine.getTemplate("code/service/service.ftl").render(params));
+        result.put("serviceImpl", engine.getTemplate("code/service/serviceImpl.ftl").render(params));
+        // util
+        result.put("util", engine.getTemplate("code/util/util.ftl").render(params));
+        return result;
     }
 }

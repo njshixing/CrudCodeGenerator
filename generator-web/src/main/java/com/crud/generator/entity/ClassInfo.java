@@ -12,6 +12,7 @@ public class ClassInfo {
 
     private String tableName;
     private String className;
+    private String daoSuffix;
     private String classComment;
     private List<FieldInfo> fieldList;
 
