@@ -31,16 +31,16 @@
 
 <#macro commonScript>
     <!-- jQuery -->
-    <script src="//cdn.staticfile.org/jquery/3.4.1/jquery.min.js"></script>
+    <script src="/generator/static/js/jquery.min.js"></script>
     <!-- Bootstrap -->
-    <script src="//cdn.staticfile.org/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script src="//cdn.bootcss.com/jquery-toast-plugin/1.3.2/jquery.toast.min.js"></script>
+    <script src="/generator/static/js/bootstrap.min.js"></script>
+    <script src="/generator/static/js/jquery.toast.min.js"></script>
     <!-- FastClick -->
-    <script src="//cdn.staticfile.org/fastclick/1.0.6/fastclick.min.js"></script>
-    <script src="//cdn.staticfile.org/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js"></script>
-    <script src="//cdn.staticfile.org/codemirror/5.48.4/codemirror.min.js"></script>
-    <script src="//cdn.staticfile.org/codemirror/5.48.4/addon/display/placeholder.min.js"></script>
-    <script src="//cdn.staticfile.org/codemirror/5.48.4/mode/clike/clike.min.js"></script>
-    <script src="//cdn.staticfile.org/codemirror/5.48.4/mode/sql/sql.min.js"></script>
-    <script src="//cdn.staticfile.org/codemirror/5.48.4/mode/xml/xml.min.js"></script>
+    <script src="/generator/static/js/fastclick.min.js"></script>
+    <script src="/generator/static/js/jquery.slimscroll.min.js"></script>
+    <script src="/generator/static/js/codemirror.min.js"></script>
+    <script src="/generator/static/js/placeholder.min.js"></script>
+    <script src="/generator/static/js/clike.min.js"></script>
+    <script src="/generator/static/js/sql.min.js"></script>
+    <script src="/generator/static/js/xml.min.js"></script>
 </#macro>
