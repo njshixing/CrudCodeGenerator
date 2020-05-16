@@ -1,2 +1,2 @@
 # CrudCodeGenerator
-java crud code generator based on spring boot
+基于springboot和freemarker生成增删改查代码
