@@ -3,7 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="${packageName}.dao.${classInfo.className}${classInfo.daoSuffix}">
 
-    <resultMap id="BaseResultMap" type="${packageName}.entity.${classInfo.className}Entity" >
+    <resultMap id="BaseResultMap" type="${packageName}.entity.${classInfo.className}DTO" >
         <#if classInfo.fieldList?exists && classInfo.fieldList?size gt 0>
             <#list classInfo.fieldList as fieldItem >
                 <result column="${fieldItem.columnName}" property="${fieldItem.fieldName}" />

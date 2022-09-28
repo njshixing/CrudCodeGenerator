@@ -1,66 +1,62 @@
 package ${packageName}.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import ${packageName}.service.${classInfo.className}Service
+import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Map;
 
 /**
  * ${classInfo.classComment}
+ *
  * @author ${authorName}
- * @date ${.now?string('yyyy-MM-dd HH:mm:ss')}
  */
+@Slf4j
 @RestController
-@RequestMapping(value = "/${classInfo.className}")
+@RequestMapping(value = "/web/${classInfo.className}")
 public class ${classInfo.className}Controller {
 
-    @Resource
+    @Autowired
     private ${classInfo.className}Service ${classInfo.className?uncap_first}Service;
 
-    /**
-    * 新增
-    **/
-    @RequestMapping("/insert")
-    public ReturnT<String> insert(${classInfo.className} ${classInfo.className?uncap_first}){
-        return ${classInfo.className?uncap_first}Service.insert(${classInfo.className?uncap_first});
+    @PostMapping("/insert")
+    public WrapperResponse<String> insert(${classInfo.className}DTO ${classInfo.className?uncap_first}){
+        ${classInfo.className?uncap_first}Service.insert(${classInfo.className?uncap_first});
+        return WrapperResponse.success("success");
     }
 
-    /**
-    * 刪除
-    **/
-    @RequestMapping("/delete")
-    public ReturnT<String> delete(int id){
-        return ${classInfo.className?uncap_first}Service.delete(id);
+    @PostMapping("/delete")
+    public WrapperResponse<String> delete(${classInfo.className}DTO ${classInfo.className?uncap_first}){
+        ${classInfo.className?uncap_first}Service.delete(id);
+        return WrapperResponse.success("success");
     }
 
-    /**
-    * 更新
-    **/
-    @RequestMapping("/update")
-    public ReturnT<String> update(${classInfo.className} ${classInfo.className?uncap_first}){
-        return ${classInfo.className?uncap_first}Service.update(${classInfo.className?uncap_first});
+    @PostMapping("/update")
+    public WrapperResponse<String> update(${classInfo.className}DTO ${classInfo.className?uncap_first}){
+        ${classInfo.className?uncap_first}Service.update(${classInfo.className?uncap_first});
+        return WrapperResponse.success("success");
     }
 
-    /**
-    * 查询 根据主键 id 查询
-    **/
-    @RequestMapping("/load")
-    public ReturnT<String> load(int id){
-        return ${classInfo.className?uncap_first}Service.load(id);
+    @GetMapping("/query")
+    public WrapperResponse<${classInfo.className}DTO> query(@RequestParam String param){
+        return ${classInfo.className?uncap_first}Service.load(param);
     }
 
-    /**
-    * 查询 分页查询
-    **/
-    @RequestMapping("/pageList")
-    public Map<String, Object> pageList(@RequestParam(required = false, defaultValue = "0") int offset,
-                                        @RequestParam(required = false, defaultValue = "10") int pageSize) {
-        return ${classInfo.className?uncap_first}Service.pageList(offset, pageSize);
+    @PostMapping("/pageList")
+    public WrapperResponse<PageResultData<${classInfo.className}DTO>> pageList(@RequestBody ${classInfo.className}VO ${classInfo.className?uncap_first}) {
+        return ${classInfo.className?uncap_first}Service.pageQuery(${classInfo.className?uncap_first});
+    }
+
+    @PostMapping("/export")
+    public void export(@RequestBody ${classInfo.className}VO ${classInfo.className?uncap_first}, HttpServletResponse response) throws IOException {
+        ${classInfo.className?uncap_first}Service.export(response,${classInfo.className?uncap_first});
     }
 }
