@@ -1,71 +1,78 @@
 package ${packageName}.bo.impl;
 
 import org.springframework.stereotype.Service;
-import ${packageName}.bo.${classInfo.className}BO
+import org.springframework.beans.factory.annotation.Autowired;
+import ${packageName}.bo.${classInfo.className}BO;
+import ${packageName}.entity.${classInfo.className}DTO;
+import ${packageName}.entity.${classInfo.className}VO;
+import cn.hsa.hsaf.core.framework.HsafBO;
+import lombok.extern.slf4j.Slf4j;
+import com.google.common.collect.Lists;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
+ *
  * ${classInfo.classComment}
+ *
  * @author ${authorName}
- * @date ${.now?string('yyyy-MM-dd HH:mm:ss')}
  */
+@Slf4j
 @Service
-public class ${classInfo.className}BOImpl implements ${classInfo.className}BO {
+public class ${classInfo.className}BOImpl extends HsafBO implements ${classInfo.className}BO {
 
-	@Resource
+	@Autowired
 	private ${classInfo.className}${classInfo.daoSuffix} ${classInfo.className?uncap_first}${classInfo.daoSuffix};
 
-
 	@Override
-	public ReturnT<String> insert(${classInfo.className} ${classInfo.className?uncap_first}) {
-
-		// valid
-		if (${classInfo.className?uncap_first} == null) {
-			return new ReturnT<String>(ReturnT.FAIL_CODE, "必要参数缺失");
+	public void insert(${classInfo.className}DTO ${classInfo.className?uncap_first}) {
+		if (null == ${classInfo.className?uncap_first}) {
+		    log.error("新增参数不能为空");
+			return;
         }
-
-		${classInfo.className?uncap_first}Mapper.insert(${classInfo.className?uncap_first});
-        return ReturnT.SUCCESS;
+		${classInfo.className?uncap_first}DAO.insert(${classInfo.className?uncap_first});
 	}
 
 
 	@Override
-	public ReturnT<String> delete(int id) {
-		int ret = ${classInfo.className?uncap_first}Mapper.delete(id);
-		return ret>0?ReturnT.SUCCESS:ReturnT.FAIL;
+	public void delete(${classInfo.className}DTO ${classInfo.className?uncap_first}) {
+		if (null == ${classInfo.className?uncap_first}) {
+		    log.error("删除参数不能为空");
+			return;
+        }
+		${classInfo.className?uncap_first}DAO.delete(${classInfo.className?uncap_first});
 	}
 
 
 	@Override
-	public ReturnT<String> update(${classInfo.className} ${classInfo.className?uncap_first}) {
-		int ret = ${classInfo.className?uncap_first}Mapper.update(${classInfo.className?uncap_first});
-		return ret>0?ReturnT.SUCCESS:ReturnT.FAIL;
+	public void update(${classInfo.className}DTO ${classInfo.className?uncap_first}) {
+		if (null == ${classInfo.className?uncap_first}) {
+		    log.error("修改参数不能为空");
+			return;
+        }
+		${classInfo.className?uncap_first}DAO.update(${classInfo.className?uncap_first});
 	}
 
 
 	@Override
-	public ${classInfo.className} load(int id) {
-		return ${classInfo.className?uncap_first}Mapper.load(id);
+	public ${classInfo.className}DTO query(String param) {
+	    if(null == param || "".equals(param)){
+            return new ${classInfo.className}DTO();
+        }
+		return ${classInfo.className?uncap_first}DAO.query(param);
 	}
 
 
 	@Override
-	public Map<String,Object> pageList(int offset, int pagesize) {
-
-		List<${classInfo.className}> pageList = ${classInfo.className?uncap_first}Mapper.pageList(offset, pagesize);
-		int totalCount = ${classInfo.className?uncap_first}Mapper.pageListCount(offset, pagesize);
-
-		// result
-		Map<String, Object> result = new HashMap<String, Object>();
-		result.put("pageList", pageList);
-		result.put("totalCount", totalCount);
-
-		return result;
+	public List<${classInfo.className}DTO> pageQuery(${classInfo.className}VO ${classInfo.className?uncap_first}) {
+        if (null == ${classInfo.className?uncap_first}) {
+		    log.error("查询参数不能为空");
+			return Lists.newArrayList();
+        }
+		return ${classInfo.className?uncap_first}DAO.pageQuery(${classInfo.className?uncap_first});
 	}
 
 }
