@@ -131,31 +131,27 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">authorName</span>
             </div>
-            <input type="text" class="form-control" id="authorName" name="authorName" value="authorName">
+            <input type="text" class="form-control" id="authorName" name="authorName" value="shixing">
             <div class="input-group-prepend">
                 <span class="input-group-text">返回封装类</span>
             </div>
-            <input type="text" class="form-control" id="returnUtil" name="returnUtil" value="ResponseT">
+            <input type="text" class="form-control" id="returnUtil" name="returnUtil" value="WrapperResponse">
             <div class="input-group-prepend">
                 <span class="input-group-text">包名路径</span>
             </div>
-            <input type="text" class="form-control" id="packageName" name="packageName" value="com.crud">
+            <input type="text" class="form-control" id="packageName" name="packageName" value="cn.hsa.cps">
         </div>
         <div class="input-group mb-3">
             <div class="input-group-prepend">
                 <span class="input-group-text">入参数据类型</span>
             </div>
-            <select type="text" class="form-control" id="dataType"
-                    name="dataType">
+            <select type="text" class="form-control" id="dataType" name="dataType">
                 <option value="sql">sql</option>
-                <option value="json">json</option>
-                <option value="sql-regex">sql-regex</option>
             </select>
             <div class="input-group-prepend">
                 <span class="input-group-text">tinyint转换类型</span>
             </div>
-            <select type="text" class="form-control" id="tinyintTransType"
-                    name="tinyintTransType">
+            <select type="text" class="form-control" id="tinyintTransType"  name="tinyintTransType">
                 <option value="boolean">boolean</option>
                 <option value="Boolean">Boolean</option>
                 <option value="Integer">Integer</option>
@@ -165,11 +161,8 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">命名转换规则</span>
             </div>
-            <select type="text" class="form-control" id="nameCaseType"
-                    name="nameCaseType">
+            <select type="text" class="form-control" id="nameCaseType" name="nameCaseType">
                 <option value="CamelCase">驼峰</option>
-                <option value="UnderScoreCase">下划线</option>
-                <#--<option value="UpperUnderScoreCase">大写下划线</option>-->
             </select>
             <div class="input-group-prepend">
                 <span class="input-group-text">swagger-ui</span>
