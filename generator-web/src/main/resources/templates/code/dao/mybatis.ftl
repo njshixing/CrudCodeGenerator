@@ -19,71 +19,56 @@
         </#if>
     </sql>
 
-    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="${packageName}.entity.${classInfo.className}Entity">
-        INSERT INTO ${classInfo.tableName}
-        <trim prefix="(" suffix=")" suffixOverrides=",">
+    <insert id="insert" parameterType="${packageName}.entity.${classInfo.className}DTO">
+        INSERT INTO ${classInfo.tableName} <include refid="Base_Column_List" />
+        VALUES (
             <#if classInfo.fieldList?exists && classInfo.fieldList?size gt 0>
                 <#list classInfo.fieldList as fieldItem >
-                    <#if fieldItem.columnName != "id" >
-                        ${r"<if test ='null != "}${fieldItem.fieldName}${r"'>"}
-                        ${fieldItem.columnName}<#if fieldItem_has_next>,</#if>
-                        ${r"</if>"}
-                    </#if>
+                    ${r"#{"}${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next>,</#if>
                 </#list>
             </#if>
-        </trim>
-        <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <#if classInfo.fieldList?exists && classInfo.fieldList?size gt 0>
-                <#list classInfo.fieldList as fieldItem >
-                    <#if fieldItem.columnName != "id" >
-                    <#--<#if fieldItem.columnName="addtime" || fieldItem.columnName="updatetime" >
-                    ${r"<if test ='null != "}${fieldItem.fieldName}${r"'>"}
-                        NOW()<#if fieldItem_has_next>,</#if>
-                    ${r"</if>"}
-                    <#else>-->
-                        ${r"<if test ='null != "}${fieldItem.fieldName}${r"'>"}
-                        ${r"#{"}${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next>,</#if>
-                        ${r"</if>"}
-                    <#--</#if>-->
-                    </#if>
-                </#list>
-            </#if>
-        </trim>
+        )
     </insert>
 
     <delete id="delete" >
         DELETE FROM ${classInfo.tableName}
-        WHERE id = ${r"#{id}"}
-    </delete>
-
-    <update id="update" parameterType="${packageName}.entity.${classInfo.className}Entity">
-        UPDATE ${classInfo.tableName}
-        <set>
+        WHERE
             <#list classInfo.fieldList as fieldItem >
-                <#if fieldItem.columnName != "id" && fieldItem.columnName != "AddTime" && fieldItem.columnName != "UpdateTime" >
-                    ${r"<if test ='null != "}${fieldItem.fieldName}${r"'>"}${fieldItem.columnName} = ${r"#{"}${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next>,</#if>${r"</if>"}
+                <#if fieldItem.columnName != "id" && fieldItem.columnName != "crteTime" && fieldItem.columnName != "updtTime" >
+                    ${r'<if test ='}${r'"'}null != "${fieldItem.fieldName} and '' != ${fieldItem.fieldName} ${r'">'}${fieldItem.columnName} = ${r"#{"}${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next>,</#if>${r"</if>"}
                 </#if>
             </#list>
-        </set>
-        WHERE id = ${r"#{"}id${r"}"}
+    </delete>
+
+    <update id="update">
+        UPDATE ${classInfo.tableName}
+        WHERE
+            <#list classInfo.fieldList as fieldItem >
+                <#if fieldItem.columnName != "id" && fieldItem.columnName != "crteTime" && fieldItem.columnName != "updtTime" >
+                    ${r'<if test ='}${r'"'}null != "${fieldItem.fieldName} and '' != ${fieldItem.fieldName} ${r'">'}${fieldItem.columnName} = ${r"#{"}${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next>,</#if>${r"</if>"}
+                </#if>
+            </#list>
     </update>
 
-
-    <select id="load" resultMap="BaseResultMap">
+    <select id="query" resultMap="BaseResultMap">
         SELECT <include refid="Base_Column_List" />
         FROM ${classInfo.tableName}
-        WHERE id = ${r"#{id}"}
+        WHERE
+            <#list classInfo.fieldList as fieldItem >
+                <#if fieldItem.columnName != "id" && fieldItem.columnName != "crteTime" && fieldItem.columnName != "updtTime" >
+                    ${r'<if test ='}${r'"'}null != "${fieldItem.fieldName} and '' != ${fieldItem.fieldName} ${r'">'}${fieldItem.columnName} = ${r"#{"}${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next>,</#if>${r"</if>"}
+                </#if>
+            </#list>
     </select>
 
-    <select id="pageList" resultMap="BaseResultMap">
+    <select id="pageQuery" resultMap="BaseResultMap">
         SELECT <include refid="Base_Column_List" />
         FROM ${classInfo.tableName}
-        LIMIT ${r"#{offset}"}, ${r"#{pageSize}"}
+        WHERE
+            <#list classInfo.fieldList as fieldItem >
+                <#if fieldItem.columnName != "id" && fieldItem.columnName != "crteTime" && fieldItem.columnName != "updtTime" >
+                    ${r'<if test ='}${r'"'}null != "${fieldItem.fieldName} and '' != ${fieldItem.fieldName} ${r'">'}${fieldItem.columnName} = ${r"#{"}${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next>,</#if>${r"</if>"}
+                </#if>
+            </#list>
     </select>
-
-    <select id="pageListCount" resultType="java.lang.Integer">
-        SELECT count(1)
-        FROM ${classInfo.tableName}
-    </select>
-
 </mapper>

@@ -23,8 +23,6 @@ public class ${classInfo.className}DO implements Serializable {
     private ${fieldItem.fieldClass} ${fieldItem.fieldName};
 
 </#list>
-    public ${classInfo.className}() {
-    }
 </#if>
 
 }

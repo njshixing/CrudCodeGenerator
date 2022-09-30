@@ -16,21 +16,21 @@ public interface ${classInfo.className}${classInfo.daoSuffix} {
     *
     * @param ${classInfo.className?uncap_first} ${classInfo.className?uncap_first}
     */
-    void insert(@Param("dto") ${classInfo.className}DTO ${classInfo.className?uncap_first});
+    void insert(${classInfo.className}DTO ${classInfo.className?uncap_first});
 
     /**
     * 删除
     *
     * @param ${classInfo.className?uncap_first} ${classInfo.className?uncap_first}
     */
-    void delete(@Param("dto") ${classInfo.className}DTO ${classInfo.className?uncap_first});
+    void delete(${classInfo.className}DTO ${classInfo.className?uncap_first});
 
     /**
     * 更新
     *
     * @param ${classInfo.className?uncap_first} ${classInfo.className?uncap_first}
     */
-    void update(@Param("dto") ${classInfo.className}DTO ${classInfo.className?uncap_first});
+    void update(${classInfo.className}DTO ${classInfo.className?uncap_first});
 
     /**
     * 查询单条记录
@@ -44,5 +44,5 @@ public interface ${classInfo.className}${classInfo.daoSuffix} {
     *
     * @param ${classInfo.className?uncap_first}VO 分页查询参数
     */
-    List<${classInfo.className}DTO> pageQuery(@Param("vo") ${classInfo.className}VO ${classInfo.className?uncap_first}VO);
+    List<${classInfo.className}DTO> pageQuery(${classInfo.className}VO ${classInfo.className?uncap_first}VO);
 }
