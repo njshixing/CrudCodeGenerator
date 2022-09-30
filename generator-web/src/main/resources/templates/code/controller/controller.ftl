@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping(value = "/web/${classInfo.className}")
+@RequestMapping(value = "/web/${classInfo.className?uncap_first}")
 public class ${classInfo.className}Controller {
 
     @Autowired
