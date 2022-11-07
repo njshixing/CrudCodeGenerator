@@ -35,7 +35,7 @@
         WHERE
             <#list classInfo.fieldList as fieldItem >
                 <#if fieldItem.columnName != "id" && fieldItem.columnName != "crteTime" && fieldItem.columnName != "updtTime" >
-                    ${r'<if test ='}${r'"'}null != "${fieldItem.fieldName} and '' != ${fieldItem.fieldName} ${r'">'}${fieldItem.columnName} = ${r"#{"}${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next>,</#if>${r"</if>"}
+                    ${r'<if test ='}${r'"'}null != ${fieldItem.fieldName} and '' != ${fieldItem.fieldName} ${r'">'}${fieldItem.columnName} = ${r"#{"}${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next>,</#if>${r"</if>"}
                 </#if>
             </#list>
     </delete>
@@ -45,7 +45,7 @@
         WHERE
             <#list classInfo.fieldList as fieldItem >
                 <#if fieldItem.columnName != "id" && fieldItem.columnName != "crteTime" && fieldItem.columnName != "updtTime" >
-                    ${r'<if test ='}${r'"'}null != "${fieldItem.fieldName} and '' != ${fieldItem.fieldName} ${r'">'}${fieldItem.columnName} = ${r"#{"}${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next>,</#if>${r"</if>"}
+                    ${r'<if test ='}${r'"'}null != ${fieldItem.fieldName} and '' != ${fieldItem.fieldName} ${r'">'}${fieldItem.columnName} = ${r"#{"}${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next>,</#if>${r"</if>"}
                 </#if>
             </#list>
     </update>
@@ -56,7 +56,7 @@
         WHERE
             <#list classInfo.fieldList as fieldItem >
                 <#if fieldItem.columnName != "id" && fieldItem.columnName != "crteTime" && fieldItem.columnName != "updtTime" >
-                    ${r'<if test ='}${r'"'}null != "${fieldItem.fieldName} and '' != ${fieldItem.fieldName} ${r'">'}${fieldItem.columnName} = ${r"#{"}${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next>,</#if>${r"</if>"}
+                    ${r'<if test ='}${r'"'}null != ${fieldItem.fieldName} and '' != ${fieldItem.fieldName} ${r'">'}${fieldItem.columnName} = ${r"#{"}${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next>,</#if>${r"</if>"}
                 </#if>
             </#list>
     </select>
@@ -67,7 +67,7 @@
         WHERE
             <#list classInfo.fieldList as fieldItem >
                 <#if fieldItem.columnName != "id" && fieldItem.columnName != "crteTime" && fieldItem.columnName != "updtTime" >
-                    ${r'<if test ='}${r'"'}null != "${fieldItem.fieldName} and '' != ${fieldItem.fieldName} ${r'">'}${fieldItem.columnName} = ${r"#{"}${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next>,</#if>${r"</if>"}
+                    ${r'<if test ='}${r'"'}null != ${fieldItem.fieldName} and '' != ${fieldItem.fieldName} ${r'">'}${fieldItem.columnName} = ${r"#{"}${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next>,</#if>${r"</if>"}
                 </#if>
             </#list>
     </select>
