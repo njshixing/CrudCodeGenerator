@@ -18,6 +18,13 @@ public interface ${classInfo.className}${classInfo.daoSuffix} {
     */
     void insert(${classInfo.className}DTO ${classInfo.className?uncap_first});
 
+   /**
+    * 批量新增
+    *
+    * @param ${classInfo.className?uncap_first} ${classInfo.className?uncap_first}
+    */
+    void insertList(List<${classInfo.className}DTO> resultList);
+
     /**
     * 删除
     *
