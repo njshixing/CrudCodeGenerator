@@ -20,7 +20,7 @@
     </sql>
 
     <insert id="insert" parameterType="${packageName}.entity.${classInfo.className}DTO">
-        INSERT INTO ${classInfo.tableName} <include refid="Base_Column_List" />
+        INSERT INTO ${classInfo.tableName} (<include refid="Base_Column_List" />)
         VALUES (
             <#if classInfo.fieldList?exists && classInfo.fieldList?size gt 0>
                 <#list classInfo.fieldList as fieldItem >
@@ -42,12 +42,13 @@
 
     <update id="update">
         UPDATE ${classInfo.tableName}
-        WHERE
+        <set>
             <#list classInfo.fieldList as fieldItem >
                 <#if fieldItem.columnName != "id" && fieldItem.columnName != "crteTime" && fieldItem.columnName != "updtTime" >
                     ${r'<if test ='}${r'"'}null != ${fieldItem.fieldName} and '' != ${fieldItem.fieldName} ${r'">'}${fieldItem.columnName} = ${r"#{"}${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next>,</#if>${r"</if>"}
                 </#if>
             </#list>
+        </set>
     </update>
 
     <select id="query" resultMap="BaseResultMap">
@@ -56,7 +57,7 @@
         WHERE
             <#list classInfo.fieldList as fieldItem >
                 <#if fieldItem.columnName != "id" && fieldItem.columnName != "crteTime" && fieldItem.columnName != "updtTime" >
-                    ${r'<if test ='}${r'"'}null != ${fieldItem.fieldName} and '' != ${fieldItem.fieldName} ${r'">'}${fieldItem.columnName} = ${r"#{"}${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next>,</#if>${r"</if>"}
+                    ${r'<if test ='}${r'"'}null != ${fieldItem.fieldName} and '' != ${fieldItem.fieldName} ${r'">'}${fieldItem.columnName} = ${r"#{"}${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next></#if>${r"</if>"}
                 </#if>
             </#list>
     </select>
@@ -67,7 +68,7 @@
         WHERE
             <#list classInfo.fieldList as fieldItem >
                 <#if fieldItem.columnName != "id" && fieldItem.columnName != "crteTime" && fieldItem.columnName != "updtTime" >
-                    ${r'<if test ='}${r'"'}null != ${fieldItem.fieldName} and '' != ${fieldItem.fieldName} ${r'">'}${fieldItem.columnName} = ${r"#{"}${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next>,</#if>${r"</if>"}
+                    ${r'<if test ='}${r'"'}null != ${fieldItem.fieldName} and '' != ${fieldItem.fieldName} ${r'">'}${fieldItem.columnName} = ${r"#{"}${fieldItem.fieldName}${r"}"}<#if fieldItem_has_next></#if>${r"</if>"}
                 </#if>
             </#list>
     </select>
